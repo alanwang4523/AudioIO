@@ -16,39 +16,17 @@
 package com.alan.audioio.audio;
 
 import com.alan.audioio.audio.common.AudioIOBuilder;
+import com.alan.audioio.audio.common.Type;
 
 /**
  * Author: AlanWang4523.
- * Date: 19/6/2 00:59.
+ * Date: 2019-06-14 23:04.
  * Mail: alanwang4523@gmail.com
  */
-public abstract class AudioIOStream implements IAudioIO {
+public class AudioPlayer extends AudioIOStream {
 
-    private static native final void native_init();
-
-    static {
-        System.loadLibrary("audio_io");
-        native_init();
+    public AudioPlayer(AudioIOBuilder builder) {
+        builder.setDirection(Type.Direction.Output);
+        native_create(builder);
     }
-
-    @Override
-    public void start() {
-
-    }
-
-    @Override
-    public void stop() {
-
-    }
-
-    @Override
-    public void release() {
-        native_release();
-    }
-
-    /////////////////////////// Native functions ///////////////////////////
-
-    protected native final void native_create(AudioIOBuilder builder);
-
-    private native final void native_release();
 }

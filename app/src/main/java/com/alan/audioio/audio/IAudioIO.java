@@ -15,40 +15,16 @@
  */
 package com.alan.audioio.audio;
 
-import com.alan.audioio.audio.common.AudioIOBuilder;
-
 /**
  * Author: AlanWang4523.
- * Date: 19/6/2 00:59.
+ * Date: 2019-06-14 22:53.
  * Mail: alanwang4523@gmail.com
  */
-public abstract class AudioIOStream implements IAudioIO {
+public interface IAudioIO {
 
-    private static native final void native_init();
+    void start();
 
-    static {
-        System.loadLibrary("audio_io");
-        native_init();
-    }
+    void stop();
 
-    @Override
-    public void start() {
-
-    }
-
-    @Override
-    public void stop() {
-
-    }
-
-    @Override
-    public void release() {
-        native_release();
-    }
-
-    /////////////////////////// Native functions ///////////////////////////
-
-    protected native final void native_create(AudioIOBuilder builder);
-
-    private native final void native_release();
+    void release();
 }
