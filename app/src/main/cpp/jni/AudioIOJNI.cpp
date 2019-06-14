@@ -43,12 +43,26 @@ static int AudioIOStream_native_init(JNIEnv *env) {
     return 0;
 }
 
-static void AudioIOStream_native_create(JNIEnv *env, jobject obj) {
+static void AudioIOStream_native_create(JNIEnv *env, jobject obj, jobject jBuilder) {
 //    AudioIOStream * AudioIOStream = new AudioIOStream(cStr);
 //    env->SetLongField(obj, gFields.context, (jlong)AudioIOStream);
 }
 
-static void AudioIOStream_native_release(JNIEnv *env, jobject obj, jint type) {
+static void AudioIOStream_native_start(JNIEnv *env, jobject obj) {
+//    AudioIOStream * AudioIOStream = (AudioIOStream *)env->GetLongField(obj, gFields.context);
+//    if (!AudioIOStream) {
+//        return;
+//    }
+}
+
+static void AudioIOStream_native_stop(JNIEnv *env, jobject obj) {
+//    AudioIOStream * AudioIOStream = (AudioIOStream *)env->GetLongField(obj, gFields.context);
+//    if (!AudioIOStream) {
+//        return;
+//    }
+}
+
+static void AudioIOStream_native_release(JNIEnv *env, jobject obj) {
 //    AudioIOStream * AudioIOStream = (AudioIOStream *)env->GetLongField(obj, gFields.context);
 //    if (AudioIOStream) {
 //        delete AudioIOStream;
@@ -58,7 +72,9 @@ static void AudioIOStream_native_release(JNIEnv *env, jobject obj, jint type) {
 
 static JNINativeMethod gJni_Methods[] = {
         {"native_init", "()V", (void*)AudioIOStream_native_init},
-        {"native_create", "()V", (void*)AudioIOStream_native_create},
+        {"native_create", "(Lcom/alan/audioio/audio/common/AudioIOBuilder;)V", (void*)AudioIOStream_native_create},
+        {"native_start", "()V", (void*)AudioIOStream_native_start},
+        {"native_start", "()V", (void*)AudioIOStream_native_stop},
         {"native_release", "()V", (void*)AudioIOStream_native_release},
 };
 

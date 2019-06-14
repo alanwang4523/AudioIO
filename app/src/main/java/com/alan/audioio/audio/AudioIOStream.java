@@ -33,12 +33,12 @@ public abstract class AudioIOStream implements IAudioIO {
 
     @Override
     public void start() {
-
+        native_start();
     }
 
     @Override
     public void stop() {
-
+        native_stop();
     }
 
     @Override
@@ -49,6 +49,10 @@ public abstract class AudioIOStream implements IAudioIO {
     /////////////////////////// Native functions ///////////////////////////
 
     protected native final void native_create(AudioIOBuilder builder);
+
+    private native final void native_start();
+
+    private native final void native_stop();
 
     private native final void native_release();
 }
