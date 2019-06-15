@@ -22,9 +22,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.ArrayMap;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Author: AlanWang4523.
@@ -34,18 +33,13 @@ import java.util.TreeSet;
 public class RuntimePermissionsManager {
 
     private static final int DENY_COUNT_MAX = 3;
-
-    /**
-     * A {@link Map} of permission names mapped to deny counts so we can keep track of the number of
-     * times the user has denied each permission
-     */
     private final ArrayMap<String, Integer> mDenyCountMap;
     private Activity mActivity;
     private int mRequestCode;
     private Listener listener;
 
     public RuntimePermissionsManager(@NonNull Activity activity,
-                                      @NonNull String... permissionName) {
+                                     @NonNull String... permissionName) {
         mActivity = activity;
         mRequestCode = generateRequestCode(activity);
         mDenyCountMap = new ArrayMap<>();
@@ -59,12 +53,12 @@ public class RuntimePermissionsManager {
     }
 
     /**
-     * Check whether every requested permission has been granted
-     * @return true if all requested permission has been granted
+     * Check whether all requested permission has been granted
+     * @return
      */
     public boolean isAllPermissionsGranted() {
         boolean allPermissionsGranted = true;
-        if (isRuntimePermissionRequiredByApiLevel()) {
+        if (isRuntimePermissionRequired()) {
             for (String permissionName : mDenyCountMap.keySet()){
                 if (!isPermissionGranted(mActivity, permissionName)){
                     allPermissionsGranted = false;
@@ -75,20 +69,39 @@ public class RuntimePermissionsManager {
     }
 
     /**
-     * Tell Android to show the user a dialog asking for the specified permission.  We request the
-     * permissions without an explanation because the reason for the request should be obvious to the user.
+     * Make a request of permissions that we need
+     * @return
      */
-    public void showPermissionsRequest() {
-        Set<String> permissionsSet = new TreeSet<>();
+    public void makeRequest() {
+        if (!isAllPermissionsGranted()){
+            if (isAskedTooManyTimes()){
+                if (listener != null) {
+                    listener.onAskedTooManyTimes();
+                }
+            } else {
+                tryToRequestPermissions();
+            }
+        } else {
+            if (listener != null) {
+                listener.onPermissionsGranted(true);
+            }
+        }
+    }
+
+    /**
+     * Try to request the permissions
+     */
+    private void tryToRequestPermissions() {
+        Set<String> permissionsSet = new HashSet<>();
         for (String permissionName : mDenyCountMap.keySet()) {
             if (!isPermissionGranted(mActivity, permissionName)) {
-                if (!askedTooManyTimes(mDenyCountMap.get(permissionName))) {
-                    permissionsSet.add(permissionName);
-                } else {
+                if (isDenyTooManyTimes(mDenyCountMap.get(permissionName))) {
                     if (listener != null) {
-                        listener.onShowTooManyTimes();
+                        listener.onAskedTooManyTimes();
                     }
                     return;
+                } else {
+                    permissionsSet.add(permissionName);
                 }
             }
         }
@@ -112,21 +125,57 @@ public class RuntimePermissionsManager {
         if (permissions.length == 0 && grantResults.length == 0){
             return;
         }
-        if (requestCode == mRequestCode) {
-            for (int i=0; i<grantResults.length;i++){
-                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                    incrementDenyCount(permissions[i]);
-                }
+        if (requestCode != mRequestCode) {
+            return;
+        }
+        for (int i=0; i<grantResults.length;i++){
+            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                incrementDenyCount(permissions[i]);
             }
-            if (listener != null){
-                listener.onPermissionsGranted(isAllPermissionsGranted());
-            }
+        }
+        if (listener != null){
+            listener.onPermissionsGranted(isAllPermissionsGranted());
         }
     }
 
     private void incrementDenyCount(String permissionName) {
         Integer denyCount = mDenyCountMap.get(permissionName) + 1;
         mDenyCountMap.put(permissionName, denyCount);
+    }
+
+    /**
+     * Did we already ask the user for permission too many times?
+     *
+     * @return
+     */
+    private boolean isAskedTooManyTimes() {
+        boolean shouldShowHint = false;
+        if (isRuntimePermissionRequired()) {
+            for (Integer denyCount : mDenyCountMap.values()){
+                if (isDenyTooManyTimes(denyCount)){
+                    shouldShowHint = true;
+                    break;
+                }
+            }
+        }
+        return shouldShowHint;
+    }
+
+    /**
+     * Did we already ask the user for permission too many times?
+     * @return
+     * @param denyCount
+     */
+    private boolean isDenyTooManyTimes(int denyCount) {
+        return denyCount >= DENY_COUNT_MAX;
+    }
+
+    /**
+     * Determines whether runtime permissions are required. API 23 (Android M, 6.0) or higher requires runtime permissions.
+     * @return
+     */
+    private boolean isRuntimePermissionRequired() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
     /**
@@ -149,38 +198,17 @@ public class RuntimePermissionsManager {
         return context.hashCode() & 0xFF;
     }
 
-    /**
-     * Did we already ask the user for permission too many times?
-     * @return
-     * @param denyCount
-     */
-    private boolean askedTooManyTimes(int denyCount) {
-        return denyCount >= DENY_COUNT_MAX;
-    }
-
-    /**
-     * Determines whether runtime permissions are required, based on the version of Android that
-     * the user is running.  API 23 (Marshmallow) or higher requires runtime permissions.
-     *
-     * @return
-     */
-    private boolean isRuntimePermissionRequiredByApiLevel() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
-    }
 
     public interface Listener {
         /**
-         * Called when the user has either granted or denied a runtime permission request.  The
-         * implementing {@link Listener}, can then
-         * check whether it has the permissions to do what it needs to do.
-         *
+         * Called when the user has either granted or denied a runtime permission request.
          * @param isAllPermissionsGranted
          */
         void onPermissionsGranted(boolean isAllPermissionsGranted);
 
         /**
-         * show too many times
+         * Called when asked too many times
          */
-        void onShowTooManyTimes();
+        void onAskedTooManyTimes();
     }
 }
