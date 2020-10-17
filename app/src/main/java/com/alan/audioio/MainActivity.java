@@ -4,7 +4,7 @@ import android.Manifest;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
-import com.alan.audioio.utils.Logger;
+import com.alan.audioio.utils.ALog;
 import com.alan.audioio.utils.RuntimePermissionsManager;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,12 +24,12 @@ public class MainActivity extends AppCompatActivity {
         runtimePermissionsManager.setListener(new RuntimePermissionsManager.Listener() {
             @Override
             public void onPermissionsGranted(boolean isAllPermissionsGranted) {
-                Logger.d("onPermissionsGranted()-->> isAllPermissionsGranted = " + isAllPermissionsGranted);
+                ALog.d("onPermissionsGranted()-->> isAllPermissionsGranted = " + isAllPermissionsGranted);
             }
 
             @Override
             public void onAskedTooManyTimes() {
-                Logger.d("onAskedTooManyTimes()-->>");
+                ALog.d("onAskedTooManyTimes()-->>");
             }
         });
         runtimePermissionsManager.makeRequest();

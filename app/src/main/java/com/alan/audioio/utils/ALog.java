@@ -23,7 +23,7 @@ import com.alan.audioio.BuildConfig;
  * Date: 2019-06-16 00:03.
  * Mail: alanwang4523@gmail.com
  */
-public class Logger {
+public class ALog {
     private static boolean DEBUG = BuildConfig.DEBUG;
 
     public static void setDebug(boolean isDebug) {
