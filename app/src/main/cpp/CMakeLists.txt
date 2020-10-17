@@ -8,8 +8,9 @@ cmake_minimum_required(VERSION 3.4.1)
 set(CPP_DIR_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 set(OBOE_LIB_PATH ${CPP_DIR_PATH}/oboe/libs/${ANDROID_ABI}/liboboe.a)
 
-file(GLOB_RECURSE CPP_FILES_IN_AUDIOIO "${CPP_DIR_PATH}/audio_io/*.cpp")
-file(GLOB_RECURSE CPP_FILES_IN_JNI "${CPP_DIR_PATH}/jni/*.cpp")
+#file(GLOB_RECURSE CPP_FILES_IN_AUDIOIO "${CPP_DIR_PATH}/audio_io/*.cpp")
+file(GLOB CPP_FILES_IN_AUDIOIO "${CPP_DIR_PATH}/audio_io/*.cpp")
+file(GLOB CPP_FILES_IN_JNI "${CPP_DIR_PATH}/jni/*.cpp")
 
 include_directories(${CPP_DIR_PATH}/)
 include_directories(${CPP_DIR_PATH}/oboe/include/)
