@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--自定义的 ChordItemView-->
+    <declare-styleable name="PianoKeyItemView">
+        <attr name="civ_corner_radius" format="dimension" />
+        <attr name="civ_fill_color" format="color" />
+        <attr name="civ_text" format="string" />
+    </declare-styleable>
+
+</resources>

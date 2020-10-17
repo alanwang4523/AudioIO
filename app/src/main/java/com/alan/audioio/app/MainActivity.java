@@ -1,22 +1,21 @@
-package com.alan.audioio;
+package com.alan.audioio.app;
 
 import android.Manifest;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
+
+import com.alan.audioio.R;
 import com.alan.audioio.utils.ALog;
 import com.alan.audioio.utils.RuntimePermissionsManager;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Example of a call to a native method
-        TextView tv = findViewById(R.id.sample_text);
-        tv.setText("Audio IO");
 
         RuntimePermissionsManager runtimePermissionsManager = new RuntimePermissionsManager(this,
                 Manifest.permission.RECORD_AUDIO,
@@ -33,6 +32,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         runtimePermissionsManager.makeRequest();
+
+
+        findViewById(R.id.btnTestSoundPool).setOnClickListener(this);
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.btnTestAudioRecord) {
+
+        }
     }
 
 }
