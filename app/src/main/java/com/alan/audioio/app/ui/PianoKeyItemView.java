@@ -60,7 +60,7 @@ public class PianoKeyItemView extends RelativeLayout {
         LayoutInflater.from(getContext()).inflate(R.layout.piano_key_item_layout, this);
 
         float mRoundRadius = 20.0f;
-        int fillColor = this.getResources().getColor(R.color.chord_A);
+        int fillColor = this.getResources().getColor(R.color.key_A);
         String text = "";
         if (attrs != null) {
             final TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.PianoKeyItemView, defStyle, 0);
@@ -75,11 +75,11 @@ public class PianoKeyItemView extends RelativeLayout {
         drawable.setColor(fillColor);
         this.setBackground(drawable);
 
-        textView = this.findViewById(R.id.tv_chord_name);
+        textView = this.findViewById(R.id.tv_key_name);
         textView.setText(text);
     }
 
-    public String getChordName() {
+    public String getKeyName() {
         return textView.getText().toString();
     }
 

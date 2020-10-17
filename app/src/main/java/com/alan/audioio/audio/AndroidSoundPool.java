@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
  * Date: 2020/10/17 14:57.
  * Mail: alanwang4523@gmail.com
  */
-class AndroidSoundPool {
+public class AndroidSoundPool {
     private static final String TAG = AndroidSoundPool.class.getSimpleName();
     private static final int MSG_FADE_OUT = 1001;
     private static final int FADE_DURATION = 30;
@@ -183,7 +183,7 @@ class AndroidSoundPool {
     /**
      * 停止播放，停止时会做 fade out
      */
-    public void stopAll() {
+    public void stopPlay() {
         mHandler.removeMessages(MSG_FADE_OUT);
         mHandler.sendEmptyMessage(MSG_FADE_OUT);
         try {

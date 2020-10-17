@@ -10,11 +10,9 @@
     <color name="default_text_black">#ff333333</color>
     <color name="default_yellow">#f7c402</color>
 
-    <color name="chord_A">#FF6D6D</color>
-    <color name="chord_B">#F7C402</color>
-    <color name="chord_C">#51AC3A</color>
-    <color name="chord_D">#49C5E9</color>
-    <color name="chord_E">#8394EC</color>
-    <color name="chord_F">#E467FF</color>
-    <color name="chord_G">#FF8C3E</color>
+    <color name="key_A">#FF6D6D</color>
+    <color name="key_B">#FF8C3E</color>
+    <color name="key_C">#51AC3A</color>
+    <color name="key_D">#49C5E9</color>
+    <color name="key_E">#E467FF</color>
 </resources>

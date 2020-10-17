@@ -27,7 +27,7 @@
                 android:id="@+id/btnTestSoundPool"
                 android:layout_width="match_parent"
                 android:layout_height="45dip"
-                android:text="PlaySing"
+                android:text="SoundPoolPlay"
                 android:textSize="16sp"
                 android:textColor="@color/white"
                 android:background="@color/colorPrimaryDark"

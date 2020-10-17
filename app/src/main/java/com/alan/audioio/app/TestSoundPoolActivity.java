@@ -18,19 +18,17 @@ package com.alan.audioio.app;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.alan.audioio.R;
 import com.alan.audioio.app.ui.PianoKeyItemView;
+import com.alan.audioio.audio.AndroidSoundPool;
+import com.alan.audioio.audio.common.APPContext;
 import com.alan.audioio.audio.exception.AudioException;
 import com.alan.audioio.utils.ALog;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,20 +45,19 @@ public class TestSoundPoolActivity  extends AppCompatActivity implements View.On
     }
 
     private static final String MUSIC_PIANO_DIR = "assets://piano/";
-    private static final String MUSIC_GUITAR_DIR = "assets://guitar/";
-    private static final String[] CHORD_NAME = {"A", "B", "C", "D", "E",};
+    private static final String[] KEY_NAMES = {"A", "B", "C", "D", "E",};
     private static final String FILE_SUFFIX = ".m4a";
 
-    private String mCurMusicDir = MUSIC_PIANO_DIR;
+    private static final int PIANO_KEYS_COUNT = 5;
+    private static final int MAX_SOUND_COUNT = 5;
+    private int[] btnPianoKeysIdArr;// 按钮id
+    private PianoKeyItemView[] pianoKeyItemViewArr;
+    private HashMap<Integer, Integer> btnIdIndexMap = new HashMap<>(PIANO_KEYS_COUNT);
+    private HashMap<Integer, Integer> btnIdAndSoundIdMap = new HashMap<>(PIANO_KEYS_COUNT);
+    private TextView btnStopPlay;
+    private ProgressDialog mProgressDialog;
+    private AndroidSoundPool mAndroidSoundPool;
 
-    private static final int CHORDS_COUNT = 5;
-    private static final int MAX_STREAM_COUNT = 5;
-    private int[] btnChordsIdArr;// 按钮id
-    private PianoKeyItemView[] chordItemViewArr;
-    private HashMap<Integer, Integer> btnIdIndexMap = new HashMap<>(CHORDS_COUNT);
-    private HashMap<Integer, Integer> btnIdAndStreamIdMap = new HashMap<>(CHORDS_COUNT);
-    private LinearLayout llChordContainer;
-    private TextView btnStartSing;
 
 
     @Override
@@ -68,42 +65,101 @@ public class TestSoundPoolActivity  extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sound_pool);
 
-        llChordContainer = findViewById(R.id.ll_chord_container);
+        btnStopPlay = findViewById(R.id.btn_stop);
+        btnStopPlay.setOnClickListener(this);
 
-        btnStartSing = findViewById(R.id.btn_stop);
-        btnStartSing.setOnClickListener(this);
+        APPContext.getInstance().setContext(this);
 
-        btnChordsIdArr = new int[CHORDS_COUNT];
-        btnChordsIdArr[0] = R.id.btn_chord_A;
-        btnChordsIdArr[1] = R.id.btn_chord_B;
-        btnChordsIdArr[2] = R.id.btn_chord_C;
-        btnChordsIdArr[3] = R.id.btn_chord_D;
-        btnChordsIdArr[4] = R.id.btn_chord_E;
+        btnPianoKeysIdArr = new int[PIANO_KEYS_COUNT];
+        btnPianoKeysIdArr[0] = R.id.btn_key_A;
+        btnPianoKeysIdArr[1] = R.id.btn_key_B;
+        btnPianoKeysIdArr[2] = R.id.btn_key_C;
+        btnPianoKeysIdArr[3] = R.id.btn_key_D;
+        btnPianoKeysIdArr[4] = R.id.btn_key_E;
 
-        chordItemViewArr = new PianoKeyItemView[CHORDS_COUNT];
-        for (int i = 0; i < chordItemViewArr.length; i++) {
-            btnIdIndexMap.put(btnChordsIdArr[i], i);
-            chordItemViewArr[i] = findViewById(btnChordsIdArr[i]);
-            chordItemViewArr[i].setOnClickListener(this);
+        pianoKeyItemViewArr = new PianoKeyItemView[PIANO_KEYS_COUNT];
+        for (int i = 0; i < pianoKeyItemViewArr.length; i++) {
+            btnIdIndexMap.put(btnPianoKeysIdArr[i], i);
+            pianoKeyItemViewArr[i] = findViewById(btnPianoKeysIdArr[i]);
+            pianoKeyItemViewArr[i].setOnClickListener(this);
         }
+
+        loadMusicInstrument();
+    }
+
+    private void loadMusicInstrument() {
+        ALog.e("loadMusicInstrument--------------->>");
+
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage("正在加载乐器...");
+        }
+        mProgressDialog.show();
+
+        if (mAndroidSoundPool != null) {
+            mAndroidSoundPool.release();
+        }
+        mAndroidSoundPool = new AndroidSoundPool(MAX_SOUND_COUNT);
+
+        final ArrayList<String> audioFileList = new ArrayList<>();
+        for (int i = 0; i < pianoKeyItemViewArr.length; i++) {
+            audioFileList.add(getAudioPath(i));
+        }
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    List<Integer> soundIdList = mAndroidSoundPool.load(audioFileList);
+                    for (int i = 0; i < soundIdList.size(); i++) {
+                        ALog.e("loadAudioAsync:: i = " + i + ", soundId = " + soundIdList.get(i)
+                                + ", keyPath = " + getAudioPath(i));
+                        btnIdAndSoundIdMap.put(btnPianoKeysIdArr[i], soundIdList.get(i));
+                    }
+                    TestSoundPoolActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mProgressDialog.dismiss();
+                        }
+                    });
+                } catch (AudioException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private String getAudioPath(int i) {
+        return MUSIC_PIANO_DIR + KEY_NAMES[i] + FILE_SUFFIX;
     }
 
     @Override
     protected void onDestroy() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+        if (mAndroidSoundPool != null) {
+            mAndroidSoundPool.stopPlay();
+            mAndroidSoundPool.release();
+        }
         super.onDestroy();
     }
 
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.btn_stop) {
-
+            if (mAndroidSoundPool != null) {
+                mAndroidSoundPool.stopPlay();
+            }
         } else {
             int index = btnIdIndexMap.get(view.getId());
             if (index >= 0) {
-                PianoKeyItemView chordItemView = chordItemViewArr[index];
-                int streamId = btnIdAndStreamIdMap.get(view.getId());
-                ALog.e("onClick::Chord--------------->> " + chordItemView.getChordName()
-                        + ", streamId = " + streamId + ", currentTimeMillis = " + System.currentTimeMillis());
+                PianoKeyItemView keyItemView = pianoKeyItemViewArr[index];
+                int soundId = btnIdAndSoundIdMap.get(view.getId());
+                ALog.e("PlayPiano--->> " + keyItemView.getKeyName() + ", soundId = " + soundId);
+                if (mAndroidSoundPool != null) {
+                    mAndroidSoundPool.play(soundId);
+                }
             }
         }
     }
