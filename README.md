@@ -10,5 +10,5 @@
 
 <img src="./Screenshots/SoundPoolDemo.png" width = "30%" />
 
-![Screenshots](./Screenshots/SoundPoolDemo.png){:height="50%" width="50%"}
+
 
