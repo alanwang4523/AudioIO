@@ -17,16 +17,40 @@ package com.alan.audioio.audio;
 
 import com.alan.audioio.audio.common.AudioIOBuilder;
 import com.alan.audioio.audio.common.Type;
+import com.alan.audioio.audio.exception.AudioException;
 
 /**
  * Author: AlanWang4523.
  * Date: 2019-06-14 23:04.
  * Mail: alanwang4523@gmail.com
  */
-public class AudioPlayer extends AudioIOStream {
+public class AudioPlayer {
 
-    public AudioPlayer(AudioIOBuilder builder) {
-        builder.setDirection(Type.Direction.Output);
-        native_create(builder);
+    public void init(AudioIOBuilder ioBuilder) throws AudioException {
+
+    }
+
+    public void start() {
+
+    }
+
+    public void pause() {
+
+    }
+
+    public void resume() {
+
+    }
+
+    public void stop() {
+
+    }
+
+    public void release() {
+
+    }
+
+    private void workRun() {
+
     }
 }

@@ -22,11 +22,12 @@ package com.alan.audioio.audio.common;
  */
 public class AudioIOBuilder {
     private int sampleRate;
-    private int channelCount;
-    private int bufferSize;
+    private @Type.ChannelCount int channelCount;
+    private @Type.AudioFormat int format;
     private @Type.Direction int direction;
     private @Type.AudioApi int audioApi;
     private @Type.SharingMode int sharingMode;
+    private int bufferSize;
 
     public static AudioIOBuilder builder() {
         return new AudioIOBuilder();
@@ -44,11 +45,11 @@ public class AudioIOBuilder {
         return this;
     }
 
-    public int getChannelCount() {
+    public @Type.ChannelCount int getChannelCount() {
         return channelCount;
     }
 
-    public AudioIOBuilder setChannelCount(int channelCount) {
+    public AudioIOBuilder setChannelCount(@Type.ChannelCount int channelCount) {
         this.channelCount = channelCount;
         return this;
     }
@@ -60,6 +61,14 @@ public class AudioIOBuilder {
     public AudioIOBuilder setBufferSize(int bufferSize) {
         this.bufferSize = bufferSize;
         return this;
+    }
+
+    public @Type.AudioFormat int getFormat() {
+        return format;
+    }
+
+    public void setFormat(@Type.AudioFormat int format) {
+        this.format = format;
     }
 
     public @Type.Direction int getDirection() {
