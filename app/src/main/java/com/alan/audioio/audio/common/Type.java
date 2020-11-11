@@ -81,4 +81,32 @@ public class Type {
          */
         int Shared = 1;
     }
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({AudioFormat.PCM_I16, AudioFormat.PCM_Float})
+    public @interface AudioFormat {
+        /**
+         * Signed 16-bit integers.
+         */
+        int PCM_I16 = 1; // AAUDIO_FORMAT_PCM_I16,
+
+        /**
+         * Single precision floating points.
+         */
+        int PCM_Float = 2; // AAUDIO_FORMAT_PCM_FLOAT,
+    }
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({ChannelCount.Mono, ChannelCount.Stereo})
+    public @interface ChannelCount {
+        /**
+         * Use this for mono audio
+         */
+        int Mono = 1;
+
+        /**
+         * Use this for stereo audio.
+         */
+        int Stereo = 2;
+    }
 }

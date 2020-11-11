@@ -13,27 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alan.audioio.audio;
+package com.alan.audioio.audio.common;
 
-import com.alan.audioio.audio.common.AudioIOBuilder;
-import com.alan.audioio.audio.exception.AudioException;
+import java.nio.ByteBuffer;
 
 /**
  * Author: AlanWang4523.
- * Date: 2019-06-14 22:53.
+ * Date: 2020/11/10 21:40.
  * Mail: alanwang4523@gmail.com
  */
-public interface IAudioIO {
-
-    void init(AudioIOBuilder ioBuilder) throws AudioException;
-
-    void start();
-
-    void pause();
-
-    void resume();
-
-    void stop();
-
-    void release();
+public interface IDataAvailableListener {
+    /**
+     * 有数据到来
+     * @param byteBuffer 具体数据
+     *      如果是来自采集端可以从 byteBuffer 读取数据，有效数据长度为 byteBuffer.limit()
+     *      如果是来自播放端可以往 byteBuffer 写入数据，写完后调用 byteBuffer.limit(count) 设置有效数据长度
+     */
+    void onDataAvailable(ByteBuffer byteBuffer);
 }

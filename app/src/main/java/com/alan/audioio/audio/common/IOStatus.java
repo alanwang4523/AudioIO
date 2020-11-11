@@ -13,27 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alan.audioio.audio;
+package com.alan.audioio.audio.common;
 
-import com.alan.audioio.audio.common.AudioIOBuilder;
-import com.alan.audioio.audio.exception.AudioException;
+import android.support.annotation.IntDef;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * Author: AlanWang4523.
- * Date: 2019-06-14 22:53.
+ * Date: 2020/11/10 21:19.
  * Mail: alanwang4523@gmail.com
  */
-public interface IAudioIO {
-
-    void init(AudioIOBuilder ioBuilder) throws AudioException;
-
-    void start();
-
-    void pause();
-
-    void resume();
-
-    void stop();
-
-    void release();
+@Retention(RetentionPolicy.SOURCE)
+@IntDef({
+        IOStatus.UNINITIATED, IOStatus.INITIATED,
+        IOStatus.START, IOStatus.PAUSE,
+        IOStatus.RESUME, IOStatus.STOP})
+public @interface IOStatus {
+    int UNINITIATED = -1;
+    int INITIATED   = 0;
+    int START       = 1;
+    int PAUSE       = 2;
+    int RESUME      = 3;
+    int STOP        = 4;
 }
