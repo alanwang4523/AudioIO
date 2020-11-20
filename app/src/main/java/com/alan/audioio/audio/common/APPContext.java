@@ -17,7 +17,7 @@ package com.alan.audioio.audio.common;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.support.annotation.Keep;
+import androidx.annotation.Keep;
 
 /**
  * Author: AlanWang4523.

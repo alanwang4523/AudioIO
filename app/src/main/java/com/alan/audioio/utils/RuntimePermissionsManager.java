@@ -18,10 +18,10 @@ package com.alan.audioio.utils;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.util.ArrayMap;
+import androidx.annotation.NonNull;
+import androidx.collection.ArrayMap;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import java.util.HashSet;
 import java.util.Set;
 

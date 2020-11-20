@@ -180,7 +180,6 @@ public class AudioRecorder {
             int readLen;
             int totalReadLen;
             int needReadLen;
-            boolean isFirstFrame = true;
             mAudioRecord.startRecording();
             while (true) {
                 // 状态处理

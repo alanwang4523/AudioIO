@@ -67,8 +67,9 @@ public class AudioIOBuilder {
         return format;
     }
 
-    public void setFormat(@Type.AudioFormat int format) {
+    public AudioIOBuilder setFormat(@Type.AudioFormat int format) {
         this.format = format;
+        return this;
     }
 
     public @Type.Direction int getDirection() {
