@@ -32,6 +32,17 @@
                 android:textColor="@color/white"
                 android:background="@color/colorPrimaryDark"
                 android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/btnTestAudioRecord"
+                android:layout_width="match_parent"
+                android:layout_height="45dip"
+                android:layout_marginTop="20dp"
+                android:text="TestAudioRecord"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:background="@color/colorPrimaryDark"
+                android:gravity="center"/>
         </LinearLayout>
 
     </ScrollView>
