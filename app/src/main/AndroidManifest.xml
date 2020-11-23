@@ -24,6 +24,7 @@
 
         <activity android:name=".app.TestSoundPoolActivity" android:screenOrientation="portrait"> </activity>
         <activity android:name=".app.TestRecordToWavActivity" android:screenOrientation="portrait"> </activity>
+        <activity android:name=".app.ui.TestPlayWavActivity" android:screenOrientation="portrait"> </activity>
     </application>
 
 </manifest>

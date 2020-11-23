@@ -4,6 +4,7 @@ import android.Manifest;
 import android.os.Bundle;
 import android.view.View;
 import com.alan.audioio.R;
+import com.alan.audioio.app.ui.TestPlayWavActivity;
 import com.alan.audioio.audio.common.APPContext;
 import com.alan.audioio.utils.ALog;
 import com.alan.audioio.utils.RuntimePermissionsManager;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         APPContext.getInstance().setContext(this);
         findViewById(R.id.btnTestSoundPool).setOnClickListener(this);
         findViewById(R.id.btnTestAudioRecord).setOnClickListener(this);
+        findViewById(R.id.btnTestAudioPlayer).setOnClickListener(this);
 
     }
 
@@ -45,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             TestSoundPoolActivity.launchMe(this);
         } else if (view.getId() == R.id.btnTestAudioRecord) {
             TestRecordToWavActivity.launchMe(this);
+        } else if (view.getId() == R.id.btnTestAudioPlayer) {
+            TestPlayWavActivity.launchMe(this);
         }
     }
 

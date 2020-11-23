@@ -252,7 +252,7 @@ public class AudioPlayer {
                     mCurStatus = mNewStatus;
                     isNeedFade = true;
                 }
-                mLock.lock();
+                mLock.unlock();
 
                 mDataBuffer.clear();
                 if (mDataAvailableListener != null) {
