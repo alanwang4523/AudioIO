@@ -25,6 +25,7 @@ import com.alan.audioio.audio.common.IOStatus;
 import com.alan.audioio.audio.common.Type;
 import com.alan.audioio.audio.exception.AudioException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -93,7 +94,8 @@ public class AudioPlayer {
                     sampleRateInHz, channelConfig, audioFormat, minBufferSize, AudioTrack.MODE_STREAM);
 
             mChannelCount = ioBuilder.getChannelCount();
-            mDataBuffer = ByteBuffer.allocateDirect(ioBuilder.getBufferSize());
+            mDataBuffer = ByteBuffer.allocateDirect(ioBuilder.getBufferSize())
+                    .order(ByteOrder.LITTLE_ENDIAN);
             mNewStatus = IOStatus.INITIATED;
             mCurStatus = IOStatus.INITIATED;
         } catch (Exception e) {
@@ -351,7 +353,7 @@ public class AudioPlayer {
         if(1 == channelCount) {
             for(int i = 0; i < shortCount; i++) {
                 short data = (short)(byteBuffer.getShort(i * 2) * 1.0f * i / shortCount);
-                byteBuffer.putShort(i, data);
+                byteBuffer.putShort(i * 2, data);
             }
         } else {
             for(int i = 0; i < shortCount; i += 2) {

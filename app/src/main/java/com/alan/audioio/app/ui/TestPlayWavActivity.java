@@ -43,6 +43,14 @@ public class TestPlayWavActivity extends AppCompatActivity implements View.OnCli
         mBtnCommonTest.setOnClickListener(this);
         mBtnCommonTest.setText("StarTest");
 
+        ALog.e("onClick::startTest--------------------->>");
+        initAudioPlayer();
+        if (mAudioPlayer != null) {
+            mAudioPlayer.start();
+        }
+        mBtnCommonTest.setText("Pause");
+        mIsStartTest = true;
+
     }
 
     @Override
@@ -59,18 +67,17 @@ public class TestPlayWavActivity extends AppCompatActivity implements View.OnCli
         if (view.getId() == R.id.btnCommonTest) {
             if (!mIsStartTest) {
                 mIsStartTest = true;
-                mBtnCommonTest.setText("Stop");
+                mBtnCommonTest.setText("Pause");
 
-                ALog.e("onClick::startTest--------------------->>");
-                initAudioPlayer();
                 if (mAudioPlayer != null) {
-                    mAudioPlayer.start();
+                    mAudioPlayer.resume();
                 }
             } else {
                 mIsStartTest = false;
-                mBtnCommonTest.setText("StarTest");
+                mBtnCommonTest.setText("Resume");
+
                 if (mAudioPlayer != null) {
-                    mAudioPlayer.stop();
+                    mAudioPlayer.pause();
                 }
             }
         }
@@ -99,11 +106,16 @@ public class TestPlayWavActivity extends AppCompatActivity implements View.OnCli
             mAudioPlayer.setDataAvailableListener(new IDataAvailableListener() {
                 @Override
                 public void onDataAvailable(ByteBuffer byteBuffer) {
+                    int readLen = -1;
                     try {
-                        mWavFile.read(byteBuffer.array(), byteBuffer.arrayOffset(), byteBuffer.limit());
+                        readLen = mWavFile.read(byteBuffer.array(), byteBuffer.arrayOffset(), byteBuffer.limit());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    if (readLen < 0) {
+                        readLen = 0;
+                    }
+                    byteBuffer.limit(readLen);
                 }
             });
         } catch (AudioException | IOException e) {
